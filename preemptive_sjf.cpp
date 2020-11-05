@@ -1,30 +1,119 @@
 //Shortest Job frist
 //pre-emptive mode
-#include<bits/stdc++.h>
-using namespace std;
-int main(){
-	int t;
-	scanf("%d",&t);
-	int arrival[t],b[t],w[t];
-	for(int i=0;i<t;i++){
-		scanf("%d",&arrival_time[i]);
-	}
-	for(int i=0;i<t;i++){
-		scanf("%d",&burst_time[i]);
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Process { 
+	int pid; // Process ID 
+	int bt; // Burst Time 
+	int art; // Arrival Time 
+}; 
+
+// waiting time
+void FWT(Process proc[], int n, 
+								int wt[]) 
+{ 
+	int rt[n]; 
+
+	for (int i = 0; i < n; i++) 
+		rt[i] = proc[i].bt; 
+
+	int complete = 0, t = 0, minm = INT_MAX; 
+	int shortest = 0, finish_time; 
+	bool check = false; 
+
 	
-	}
-	for(int i=arrival[0],j=0;i<arrival[t-1];i++){
-		if(i==arrival[j]){
-			j++;
-			
-		}
+	while (complete != n) { 
+		for (int j = 0; j < n; j++) { 
+			if ((proc[j].art <= t) && 
+			(rt[j] < minm) && rt[j] > 0) { 
+				minm = rt[j]; 
+				shortest = j; 
+				check = true; 
+			} 
+		} 
+
+		if (check == false) { 
+			t++; 
+			continue; 
+		} 
+
+	
+		rt[shortest]--; 
+
 		
-		
-			
-	}
+		minm = rt[shortest]; 
+		if (minm == 0) 
+			minm = INT_MAX; 
+
+		// If a process gets completely 
+		// executed 
+		if (rt[shortest] == 0) { 
+
+			// Increment complete 
+			complete++; 
+			check = false; 
+
+			// Find finish time of current 
+			// process 
+			finish_time = t + 1; 
+
+			// Calculate waiting time 
+			wt[shortest] = finish_time - 
+						proc[shortest].bt - 
+						proc[shortest].art; 
+
+			if (wt[shortest] < 0) 
+				wt[shortest] = 0; 
+		}  
+		t++; 
+	} 
+} 
+
+void findTAT(Process proc[], int n, 
+						int wt[], int tat[]) 
+{ 
 	
+	for (int i = 0; i < n; i++) 
+		tat[i] = proc[i].bt + wt[i]; 
+} 
+
+void findavgTime(Process proc[], int n) 
+{ 
+	int wt[n], tat[n], total_wt = 0, 
+					total_tat = 0; 
+
+	FWT(proc, n, wt); 
+	findTAT(proc, n, wt, tat); 
+
+	cout << "Processes "
+		<< " Burst time "
+		<< " Waiting time "
+		<< " Turn around time\n"; 
+
 	
-	
-	
-	return 0;
-}
+	for (int i = 0; i < n; i++) { 
+		total_wt = total_wt + wt[i]; 
+		total_tat = total_tat + tat[i]; 
+		cout << " " << proc[i].pid << "\t\t"
+			<< proc[i].bt << "\t\t " << wt[i] 
+			<< "\t\t " << tat[i] << endl; 
+	} 
+
+	cout << "\nAverage waiting time = "
+		<< (float)total_wt / (float)n; 
+	cout << "\nAverage turn around time = "
+		<< (float)total_tat / (float)n; 
+} 
+
+int main() 
+{ 
+	Process proc[] = { { 1, 6, 1 }, { 2, 8, 1 }, 
+					{ 3, 7, 2 }, { 4, 3, 3 } }; 
+	int n = sizeof(proc) / sizeof(proc[0]); 
+
+	findavgTime(proc, n); 
+	return 0; 
+} 
+

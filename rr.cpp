@@ -18,7 +18,8 @@ int main(){
 	cin>>n;
 	cout << " enter the time quantum" <<endl;
 	cin >>quanta;
-	process p[n];int arr[2*n];arr[0]={process[0].sequence};
+	process p[n];int arr[2*n];
+	arr[0]={ process[0].sequence};
 	while(i<n){
 		cout << "Enter bt time, priority and time respectively";
 		cin >> process[i].bt;
@@ -29,11 +30,15 @@ int main(){
 	int g=0;int rear=0;
 	sort(process, process+n, comparetime);
 	for(i=0;i<2*n-1;i++){
+		//time=0;
 		if(process[i].bt>quanta){
-			time+=3;
+			process[i]-=quanta;
 		}
-		else{
-			time+=process[i].bt;
+		else if(process[i].bt<quanta){
+			//time+=process[i].bt;
+			//it will execute
+			process[i].bt=0;
+			cout<<process[i].sequence;
 		}
 		if(process[i].bt>0)
 		{

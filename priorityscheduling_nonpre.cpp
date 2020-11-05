@@ -2,66 +2,67 @@
 
 #include<bits/stdc++.h>
 using namespace std;
-struct p{
-	double time;
-	int priority;
-	int burst;
-	int sequence;
-};
-
-bool comparePriority(process i1, process i2) 
-{ 
-    return (i1.priority < i2.priority); 
-} 
-
-bool compareArrival(process i1,process i2)
+  
+struct Process
 {
-	return(i1.time < i1.time);
+    int pid; 
+    int bt;   
+    int priority; 
+};
+  
+bool comparison(Process a, Process b)
+{
+    return (a.priority > b.priority);
 }
-p process[10];   
-int wait_time=0;
-int callfun(int wait_time,int i){
-	while(i--)
-	{
-	if(wait_time >= process[i].time){
-	flag=true;
-	no=i+1;
-	break;
-	}
-   }
-   return no;
+  
+void findWaitingTime(Process proc[], int n,
+                     int wt[])
+{
+    wt[0] = 0;
+    for (int  i = 1; i < n ; i++ )
+        wt[i] =  proc[i-1].bt + wt[i-1] ;
+}
+void findTurnAroundTime( Process proc[], int n,
+                         int wt[], int tat[])
+{
+    for (int  i = 0; i < n ; i++)
+        tat[i] = proc[i].bt + wt[i];
+}
+void findavgTime(Process proc[], int n)
+{
+    int wt[n], tat[n], total_wt = 0, total_tat = 0;
+    findWaitingTime(proc, n, wt);
+    findTurnAroundTime(proc, n, wt, tat);
+    cout << "\nProcesses  "<< " Burst time  "
+         << " Waiting time  " << " Turn around time\n";
+    for (int  i=0; i<n; i++)
+    {
+        total_wt = total_wt + wt[i];
+        total_tat = total_tat + tat[i];
+        cout << "   " << proc[i].pid << "\t\t"
+             << proc[i].bt << "\t	" << wt[i]
+             << "\t\t  " << tat[i] <<endl;
+    }
+  
+    cout << "\nAverage waiting time = "
+         << (float)total_wt / (float)n;
+    cout << "\nAverage turn around time = "
+         << (float)total_tat / (float)n;
+}
+  
+void priorityScheduling(Process proc[], int n)
+{
+    sort(proc, proc + n, comparison);
+    cout<< "Order in which processes gets executed \n";
+    for (int  i = 0 ; i <  n; i++)
+        cout << proc[i].pid <<" " ;
+    findavgTime(proc, n);
+}
+int main()
+{
+    Process proc[] = {{1, 10, 2}, {2, 5, 0}, {3, 8, 1}};
+    int n = sizeof proc / sizeof proc[0];
+    priorityScheduling(proc, n);
+    return 0;
 }
 
-int main(){
-	int n,i=0;
-	/*printf("No. of processes");
-	cin >> n;*/
-
-	while(i<n){
-		cout << "Enter burst time, priority and time respectively";
-		cin >> process[i].burst;
-		cin >> process[i].priority;
-		cin >> process[i].time;
-		process[i].sequence=i;
-		i++;
-	}
-	sort(process,process+n,compareArrival);
-//	cout << "P1\n";
-	bool flag=false;int no=0;int j=1;
-	wait_time=process[0].burst;
-	cout << process[0].sequence<<endl;
-	//callfun(wait_time,)
-	while(j<n){
-    int t=callfun(wait_time,n); 
-    sort(process+j,process+t,comparePriority);
-    cout << process[j].sequence;
-    wait_time+=process[j].burst;
-    j++;
-    //callfun(wait_time,n);
-	}
-	
-	/*if(!flag){
-		cout <<"idle\n";
-	}*/
-
-}

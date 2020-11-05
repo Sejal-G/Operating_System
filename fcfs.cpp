@@ -3,7 +3,9 @@
 using namespace std;
 int main(){
 	int t;
-	scanf("%d",&t); //no of processes
+	printf("Enter the number of processes:: ");
+	scanf("%d",&t);
+	 //no of processes
 	int b[t], turn_around[t],w[t];
 	for(int i=0;i<t;i++){
 		scanf("%d",&b[i]);
@@ -20,14 +22,14 @@ int main(){
 		avg_wait+=w[i];
 		avg_turn+=turn_around[i];
 	}
-	avg_wait/=3;
-	avg_turn/=3;
+	avg_wait/=t;
+	avg_turn/=t;
 	printf("Processes\tBurst T\tWait T\t Turn around t\n");
 	for(int i=0;i<t;i++){
-	printf("%d\t%d\t%d\t%d\n",(i+1),b[i],w[i],turn_around[i]);
+	printf("%d\t\t%d\t\t%d\t\t%d\n",(i+1),b[i],w[i],turn_around[i]);
 	
 }
-    printf("Average Waiting time = %float",avg_wait);
+    printf("Average Waiting time = %f\n",avg_wait);
 	printf("Average Turn around time = %f",avg_turn);
 	return 0;
 }
